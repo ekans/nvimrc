@@ -99,6 +99,9 @@ call plug#end()
 " Plugin configuration
 """""""""""""""""""""""""""""""""""""""""
 
+" Add Fugitive info in status line
+set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
+
 " Search in project configuration
 let g:clap_provider_grep_delay = 50
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
