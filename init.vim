@@ -43,6 +43,9 @@ Plug 'tpope/vim-unimpaired'
 " shell formatting
 Plug 'vim-scripts/Super-Shell-Indent'
 
+" Python indentation
+Plug 'vim-scripts/indentpython.vim'
+
 "" Version control plugins
 " https://github.com/airblade/vim-gitgutter
 Plug 'airblade/vim-gitgutter'
