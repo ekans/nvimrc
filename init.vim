@@ -46,6 +46,9 @@ Plug 'vim-scripts/Super-Shell-Indent'
 " Python indentation
 Plug 'vim-scripts/indentpython.vim'
 
+" Dockerfile syntax
+Plug 'ekalinin/Dockerfile.vim'
+
 "" Version control plugins
 " https://github.com/airblade/vim-gitgutter
 Plug 'airblade/vim-gitgutter'
