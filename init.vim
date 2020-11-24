@@ -1,3 +1,6 @@
+" Set python3 bin
+let g:python3_host_prog="/usr/bin/python3"
+
 " Set leader key
 let maplocalleader = ","
 
@@ -138,6 +141,7 @@ let g:ale_linters = {
       \ 'clojure': ['clj-kondo']
       \}
 
+" let g:syntastic_python_checkers = ['python', 'mypy', 'pylint' ]
 
 " Set Gruvbox theme
 set background=light
