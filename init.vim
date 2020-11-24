@@ -1,6 +1,9 @@
 " Set leader key
 let maplocalleader = ","
 
+" For a useful :find
+set path=.,**
+
 " Remap keys
 " Use Esc to exit terminal state (used by vim-jack-in)
 :tnoremap <Esc> <C-\><C-n>
@@ -14,9 +17,6 @@ set relativenumber
 
 " Full color theme support for neovim
 set termguicolors
-
-" Make vim completion great again
-set path=.,**
 
 " Configure vim completion
 set wildmode=list:longest,full
