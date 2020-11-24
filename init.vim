@@ -40,6 +40,9 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 
+" shell formatting
+Plug 'vim-scripts/Super-Shell-Indent'
+
 "" Version control plugins
 " https://github.com/airblade/vim-gitgutter
 Plug 'airblade/vim-gitgutter'
