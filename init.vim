@@ -99,6 +99,9 @@ call plug#end()
 " Plugin configuration
 """""""""""""""""""""""""""""""""""""""""
 
+" for vim-gutter to refresh more frequently
+set updatetime=100
+
 " Add Fugitive info in status line
 set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
 
