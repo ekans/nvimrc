@@ -9,10 +9,12 @@ set path=.,**
 
 " Remap keys
 " Use Esc to exit terminal state (used by vim-jack-in)
-:tnoremap <Esc> <C-\><C-n>
+tnoremap <Esc> <C-\><C-n>
 
 " Use fd as escape, Spacemacs style
-:inoremap fd <esc>
+inoremap fd <esc>
+
+nnoremap <F9> :b#<cr>
 
 " Current line number and Relative line numbers
 set number
@@ -43,6 +45,9 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-unimpaired'
 
+" Interface to external formatter
+Plug 'chiel92/vim-autoformat'
+
 " shell formatting
 Plug 'vim-scripts/Super-Shell-Indent'
 
@@ -60,7 +65,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'liuchengxu/vim-clap'
 
 " Conjure
-Plug 'Olical/conjure', {'tag': 'v4.3.1'}
+Plug 'Olical/conjure', {'tag': 'v4.9.0'}
 
 
 """""""""
@@ -105,9 +110,6 @@ call plug#end()
 " for vim-gutter to refresh more frequently
 set updatetime=100
 
-" Add Fugitive info in status line
-set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
-
 " Search in project configuration
 let g:clap_provider_grep_delay = 50
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
@@ -138,12 +140,30 @@ let g:float_preview#max_height = 40
 " Lint configuration - clj-kondo
 " clj-kondo should be installed on operating system path
 let g:ale_linters = {
-      \ 'clojure': ['clj-kondo']
-      \}
+			\ 'clojure': ['clj-kondo'],
+			\ 'python': ['mypy', 'pylint'],
+			\}
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+function! LinterStatus() abort
+	let l:counts = ale#statusline#Count(bufnr(''))
 
-" let g:syntastic_python_checkers = ['python', 'mypy', 'pylint' ]
+	let l:all_errors = l:counts.error + l:counts.style_error
+	let l:all_non_errors = l:counts.total - l:all_errors
+
+	return l:counts.total == 0 ? 'OK' : printf(
+				\   '%dW %dE',
+				\   all_non_errors,
+				\   all_errors
+				\)
+endfunction
 
 " Set Gruvbox theme
 set background=light
 autocmd vimenter * colorscheme gruvbox
 
+" Add Fugitive and Linter info in status line
+set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P\ %{LinterStatus()}
+
+" Format on save
+au BufWrite * :Autoformat
