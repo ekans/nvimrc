@@ -31,6 +31,9 @@ let g:netrw_liststyle=3
 " No history for netrw
 let g:netrw_dirhistmax = 0
 
+set nowrap
+set tabstop=3 shiftwidth=3 expandtab
+
 """""""""""""""""""""""""""""""""""""""""
 " vim-plug - manage plugins
 """""""""""""""""""""""""""""""""""""""""
@@ -54,18 +57,19 @@ Plug 'vim-scripts/Super-Shell-Indent'
 " Python indentation
 Plug 'vim-scripts/indentpython.vim'
 
-" Dockerfile syntax
-Plug 'ekalinin/Dockerfile.vim'
-
 "" Version control plugins
 " https://github.com/airblade/vim-gitgutter
 Plug 'airblade/vim-gitgutter'
 
 " Searching in projects - ripgrep
-Plug 'liuchengxu/vim-clap'
+" The bang version will try to download the prebuilt binary if cargo does not exist.
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+
+" Highlight yanked region
+Plug 'machakann/vim-highlightedyank'
 
 " Conjure
-Plug 'Olical/conjure', {'tag': 'v4.9.0'}
+Plug 'Olical/conjure', {'tag': '*'}
 
 
 """""""""
@@ -81,7 +85,7 @@ Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Auto-close parens
-Plug 'jiangmiao/auto-pairs', { 'tag': 'v2.0.0' }
+Plug 'LunarWatcher/auto-pairs', { 'tag': '*' }
 
 " Completion support
 Plug 'Shougo/deoplete.nvim'
@@ -93,9 +97,18 @@ Plug 'w0rp/ale'
 """""""""
 " Themes
 
-" Gruvbox theme
-" https://github.com/morhetz/gruvbox/
-Plug 'morhetz/gruvbox'
+" https://github.com/dracula/vim
+Plug 'dracula/vim', {'as': 'dracula'}
+
+""""""
+" Zettelkasteno
+
+Plug 'vimwiki/vimwiki'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
+
+""""""
 
 call plug#end()
 
@@ -140,30 +153,52 @@ let g:float_preview#max_height = 40
 " Lint configuration - clj-kondo
 " clj-kondo should be installed on operating system path
 let g:ale_linters = {
-			\ 'clojure': ['clj-kondo'],
-			\ 'python': ['mypy', 'pylint'],
-			\}
+         \ 'clojure': ['clj-kondo'],
+         \ 'python': ['mypy', 'pylint'],
+         \}
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 function! LinterStatus() abort
-	let l:counts = ale#statusline#Count(bufnr(''))
+   let l:counts = ale#statusline#Count(bufnr(''))
 
-	let l:all_errors = l:counts.error + l:counts.style_error
-	let l:all_non_errors = l:counts.total - l:all_errors
+   let l:all_errors = l:counts.error + l:counts.style_error
+   let l:all_non_errors = l:counts.total - l:all_errors
 
-	return l:counts.total == 0 ? 'OK' : printf(
-				\   '%dW %dE',
-				\   all_non_errors,
-				\   all_errors
-				\)
+   return l:counts.total == 0 ? 'OK' : printf(
+            \   '%dW %dE',
+            \   all_non_errors,
+            \   all_errors
+            \)
 endfunction
 
-" Set Gruvbox theme
-set background=light
-autocmd vimenter * colorscheme gruvbox
+" Set theme
+set background=dark
+autocmd vimenter * colorscheme dracula
 
 " Add Fugitive and Linter info in status line
 set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P\ %{LinterStatus()}
 
 " Format on save
-au BufWrite * :Autoformat
+let g:formatdef_zprint = '"zprint {:style :community :width 80} -w"'
+let g:formatters_clojure = ['zprint']
+autocmd BufWrite *.py,*.clj :Autoformat
+
+" vimwiki
+let g:vimwiki_list = [{'ext':'.md', 'syntax':'markdown'}]
+let g:vimwiki_markdown_link_ext = 1
+
+" vim-zettel
+let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always"
+augroup filetype_vimwiki
+   autocmd!
+   nnoremap <leader>zn :ZettelNew<space>
+   nnoremap <leader>zo :ZettelOpen<space>
+   nnoremap <leader>zs :ZettelSearch<space>
+augroup END
+
+" Emoji
+ab :done: ✅
+
+if &diff
+   colorscheme default
+endif
